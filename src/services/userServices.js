@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+import User from "../models/userModel.js";
 
 //criar
 const create = (body) => User.create(body);
@@ -6,5 +6,19 @@ const create = (body) => User.create(body);
 const findAllServices = () => User.find();
 //Listar um usuario
 const findByServices = (id) => User.findById(id);
-    
-module.exports = {create , findAllServices , findByServices};  
+
+const userUpdateServices = (
+    id,
+    name,   
+    email,
+    password,
+    endereco,
+    carrinho) => User.findOneAndUpdate({ _id: id }, {
+        name,
+        email,
+        password,
+        endereco,
+        carrinho
+    });
+
+export default  { create, findAllServices, findByServices, userUpdateServices };  

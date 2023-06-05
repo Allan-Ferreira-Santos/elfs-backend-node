@@ -1,13 +1,16 @@
-const express = require('express')
-const app = express()
+import express from 'express';
+import db from '../backend-node/src/database/db.js';
+import userRoute from './src/routes/userRoute.js';
+import dotenv from "dotenv";
+dotenv.config();
+
+
 const port = 3000;
-const connectDB = require("../backend-node/src/database/db")
+const app = express();
 
-const userRoute = require("./src/routes/userRoute");
-
-connectDB();
-app.use(express.json())
-app.use("/user", userRoute);
+db();
+app.use(express.json());
+app.use(userRoute);
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);

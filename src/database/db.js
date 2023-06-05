@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const url = 'mongodb+srv://Elfs:elfs1234@elfs.t18lqj4.mongodb.net/';
+import mongoose from "mongoose";
+console.log(process.env.MONGO_DB)
+const url = process.env.MONGO_DB
 
 const connectDB = async () => {
   try {
@@ -10,4 +11,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;
