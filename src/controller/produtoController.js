@@ -131,5 +131,4 @@ async function search(req, res) {
     }
 }
 
-
 export default { create, findAll, findById, produtoUpdate, deleteById, search };

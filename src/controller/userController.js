@@ -23,7 +23,7 @@ async function create(req, res) {
         email,
         password,
         endereco,
-        carrinho,
+        typeUser,
       },
     });
   } catch (error) {
@@ -69,10 +69,10 @@ async function findById(req, res) {
 }
 
 async function userUpdate(req, res) {
-  const { name, email, password, endereco, carrinho } = req.body;
+  const { name, email, password, endereco, typeUser } = req.body;
   const id = req.params.id;
 
-  if (!name && !email && !password && !endereco && !carrinho) {
+  if (!name && !email && !password && !endereco && !typeUser) {
     return res.status(400).json({ message: "Nenhum campo para atualizar foi fornecido." });
   }
 
@@ -87,23 +87,24 @@ async function userUpdate(req, res) {
       return res.status(404).send({ message: "Usuário não encontrado." });
     }
 
+
     await userServices.userUpdateServices(
       id,
       name,
       email,
       password,
       endereco,
-      carrinho
+      typeUser
     );
 
-    res.status(200).send({ message: "Usuário atualizado com sucesso." });
+    res.status(200).send({ message: "Usuário atualizado com sucesso.", user });
   } catch (error) {
     res.status(500).send({ message: "Erro interno do servidor." });
     console.log(error);
   }
 }
 
-async function deleteById(req , res){
+async function deleteById(req, res) {
   const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
