@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-console.log(process.env.MONGO_DB)
-const url = process.env.MONGO_DB
+const url = "mongodb+srv://Elfs:elfs1234@elfs.t18lqj4.mongodb.net/"
 
 const connectDB = async () => {
   try {

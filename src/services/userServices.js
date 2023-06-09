@@ -1,10 +1,9 @@
 import User from "../models/userModel.js";
 
-//criar
-const create = (body) => User.create(body);
-//listar todos usuarios
-const findAllServices = () => User.find();
-//Listar um usuario
+const createServices = (body) => User.create(body);
+
+const findAllServices = () => User.find().sort({_id: -1});
+
 const findByServices = (id) => User.findById(id);
 
 const userUpdateServices = (
@@ -13,12 +12,14 @@ const userUpdateServices = (
     email,
     password,
     endereco,
-    carrinho) => User.findOneAndUpdate({ _id: id }, {
+    typeUser) => User.findOneAndUpdate({ _id: id }, {
         name,
         email,
         password,
         endereco,
-        carrinho
+        typeUser
     });
 
-export default  { create, findAllServices, findByServices, userUpdateServices };  
+    const deleteServices = (id) => User.findByIdAndDelete(id)
+
+export default  { createServices, findAllServices, findByServices, userUpdateServices, deleteServices };  

@@ -1,106 +1,127 @@
 import userServices from "../services/userServices.js";
+import mongoose from "mongoose";
 
 async function create(req, res) {
+  const { name, email, password, endereco, typeUser } = req.body;
 
-  const { name,
-    email,
-    password,
-    endereco,
-    carrinho } = req.body;
-
-
-  if (!name || !email || !password || !endereco || !carrinho) {
-    return res.status(400).send({ message: "error" });
+  if (!name || !email || !password || !endereco || !typeUser) {
+    return res.status(400).send({ message: "Campos obrigatórios não preenchidos." });
   }
 
-  const user = await userServices.create(req.body);
+  try {
+    const user = await userServices.createServices(req.body);
 
-  if (!user) {
-    return res.status(400).send({ message: "error ao criar usuario" });
-  }
-
-  res.status(201).send({
-    message: "Sucesso",
-    user: {
-      id: user._id,
-      name,
-      email,
-      password,
-      endereco,
-      carrinho
+    if (!user) {
+      return res.status(400).send({ message: "Erro ao criar usuário." });
     }
-  });
-};
+
+    res.status(201).send({
+      message: "Usuário criado com sucesso.",
+      user: {
+        id: user._id,
+        name,
+        email,
+        password,
+        endereco,
+        carrinho,
+      },
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Erro interno do servidor." });
+    console.log(error);
+  }
+}
 
 async function findAll(req, res) {
+  try {
+    const users = await userServices.findAllServices();
 
-  const users = await userServices.findAllServices();
+    if (!users || users.length === 0) {
+      return res.status(404).send({ message: "Nenhum usuário encontrado." });
+    }
 
-  if (users == null || users.length === 0) {
-    return res.status(400).send({ message: "error ao achar usuarios" });
+    res.status(200).send({ message: "Sucesso", users });
+  } catch (error) {
+    res.status(500).send({ message: "Erro interno do servidor." });
+    console.log(error);
   }
-
-  res.status(200).send({ message: "sucesso", users })
-
 }
 
 async function findById(req, res) {
   const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ message: "Usuario nao existe" })
+    return res.status(400).send({ message: "ID de usuário inválido." });
   }
 
-  const user = await userServices.findByServices(id)
+  try {
+    const user = await userServices.findByServices(id);
 
-  if (!user) {
-    return res.status(400).send({ message: "erro ao achar usuario" })
+    if (!user) {
+      return res.status(404).send({ message: "Usuário não encontrado." });
+    }
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send({ message: "Erro interno do servidor." });
+    console.log(error);
   }
-
-  res.send(user);
 }
 
 async function userUpdate(req, res) {
-
-  const { name,
-    email,
-    password,
-    endereco,
-    carrinho } = req.body;
+  const { name, email, password, endereco, carrinho } = req.body;
+  const id = req.params.id;
 
   if (!name && !email && !password && !endereco && !carrinho) {
-    return res.status(400).json({ message: "error" });
+    return res.status(400).json({ message: "Nenhum campo para atualizar foi fornecido." });
   }
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({ message: "ID de usuário inválido." });
+  }
+
+  try {
+    const user = await userServices.findByServices(id);
+
+    if (!user) {
+      return res.status(404).send({ message: "Usuário não encontrado." });
+    }
+
+    await userServices.userUpdateServices(
+      id,
+      name,
+      email,
+      password,
+      endereco,
+      carrinho
+    );
+
+    res.status(200).send({ message: "Usuário atualizado com sucesso." });
+  } catch (error) {
+    res.status(500).send({ message: "Erro interno do servidor." });
+    console.log(error);
+  }
+}
+
+async function deleteById(req , res){
   const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ message: "Usuario nao existe" })
+    return res.status(400).send({ message: "ID de produto inválido." });
   }
 
-  const user = await userServices.findByServices(id);
+  try {
+    const user = await userServices.deleteServices(id);
 
-  console.log("log" + user);
+    if (!user) {
+      return res.status(404).send({ message: "Produto não encontrado." });
+    }
 
-  if (!user) {
-    return res.status(400).send({ message: "erro ao achar usuario" })
+    res.status(200).send({ message: "Produto deletado com sucesso.", user });
+  } catch (error) {
+    res.status(500).send({ message: "Erro interno do servidor." });
+    console.log(error);
   }
-
-  await userServices.userUpdateServices(
-    id,
-    name,
-    email,
-    password,
-    endereco,
-    carrinho
-  );
-
-  res.status(200).send({
-    message: "sucesso",
-  })
-
-
-
 }
 
-export default { create, findAll, findById, userUpdate };
+export default { create, findAll, findById, userUpdate, deleteById };
