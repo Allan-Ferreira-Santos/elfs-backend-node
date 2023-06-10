@@ -2,6 +2,7 @@ import express from "express";
 import userController from "../src/controller/userController.js";
 import loginController from "../src/controller/loginController.js"
 import produtoController from "../src/controller/produtoController.js"
+import middlewaresLogin from "./middlewares/middlewaresLogin.js";
 
 const route = express.Router();
 
@@ -16,7 +17,7 @@ route.delete("/user/:id", userController.deleteById);
 route.post("/user/login", loginController.login);
 
 /* PRODUTO */
-route.post("/produto", produtoController.create);
+route.post("/produto", middlewaresLogin.loginTokenMiddleware , produtoController.create);
 route.get("/produto", produtoController.findAll);
 route.get("/produto/search", produtoController.search);
 route.get("/produto/:id", produtoController.findById);

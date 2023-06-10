@@ -1,15 +1,36 @@
 import produtoServices from "../services/produtoServices.js";
 import mongoose from "mongoose";
+import userServices from "../services/userServices.js";
 
 async function create(req, res) {
-    const { name, type, preco, description, disponibilidade, user } = req.body;
+    const { name, type, preco, description, disponibilidade } = req.body;
+    const { authorization } = req.headers;
 
-    if (!name || !type || !preco || !description || !disponibilidade || !user) {
+    if (!authorization) {
+        return res.status(400).send({ message: "Cliente nao tem autorizaçao." });
+    }
+
+    if (!name || !type || !preco || !description || !disponibilidade) {
         return res.status(400).send({ message: "Campos obrigatórios não preenchidos." });
     }
 
+    const user = await userServices.findByServices(req.userId)
+
+    console.log(user)
+
+    if (user.typeUser != true) {
+        return res.status(401).send( {message: "Acesso não autorizado"});
+    }
+
     try {
-        const produto = await produtoServices.createServices(req.body);
+        const produto = await produtoServices.createServices({
+            name,
+            type,
+            preco,
+            description,
+            disponibilidade,
+            user: req.userId,
+        });
 
         if (!produto) {
             return res.status(400).send({ message: "Erro ao criar produto." });

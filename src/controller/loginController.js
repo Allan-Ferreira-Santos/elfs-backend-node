@@ -18,11 +18,14 @@ async function login(req, res) {
       return res.status(400).send({ message: "E-mail ou senha inválido." });
     }
 
-    res.status(200).send({ message: "Sucesso! Seja bem-vindo.", user});
+    const token = loginServices.generateToken(user.id);
+
+    res.status(200).send({ message: "Sucesso! Seja bem-vindo.", user, token });
   } catch (error) {
     res.status(500).send({ message: "Erro interno do servidor." });
-    console.log(error);
   }
 }
+
+
 
 export default { login };
