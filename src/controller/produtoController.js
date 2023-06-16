@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 import userServices from "../services/userServices.js";
 
 async function create(req, res) {
-    const { name, type, preco, description, disponibilidade } = req.body;
+    const { name, type, preco, description, disponibilidade, image } = req.body;
     const { authorization } = req.headers;
 
     if (!authorization) {
         return res.status(400).send({ message: "Cliente nao tem autorizaçao." });
     }
 
-    if (!name || !type || !preco || !description || !disponibilidade) {
+    if (!name || !type || !preco || !description || !disponibilidade || !image) {
         return res.status(400).send({ message: "Campos obrigatórios não preenchidos." });
     }
 
@@ -19,7 +19,7 @@ async function create(req, res) {
     console.log(user)
 
     if (user.typeUser != true) {
-        return res.status(401).send( {message: "Acesso não autorizado"});
+        return res.status(401).send({ message: "Acesso não autorizado" });
     }
 
     try {
@@ -29,6 +29,7 @@ async function create(req, res) {
             preco,
             description,
             disponibilidade,
+            image,
             user: req.userId,
         });
 
@@ -83,10 +84,10 @@ async function findById(req, res) {
 }
 
 async function produtoUpdate(req, res) {
-    const { name, type, preco, description, disponibilidade, user } = req.body;
+    const { name, type, preco, description, disponibilidade, image } = req.body;
     const id = req.params.id;
 
-    if (!name || !type || !preco || !description || !disponibilidade || !user) {
+    if (!name || !type || !preco || !description || !disponibilidade || !image) {
         return res.status(400).send({ message: "Campos obrigatórios não preenchidos." });
     }
 
@@ -101,7 +102,7 @@ async function produtoUpdate(req, res) {
             return res.status(404).send({ message: "Produto não encontrado." });
         }
 
-        await produtoServices.updateServices(id, name, type, preco, description, disponibilidade, user);
+        await produtoServices.updateServices(id, name, type, preco, description, disponibilidade, image);
 
         res.status(200).send({ message: "Produto atualizado com sucesso.", produto });
     } catch (error) {

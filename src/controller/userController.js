@@ -7,6 +7,7 @@ async function create(req, res) {
   if (!name || !email || !password || !endereco || !typeUser) {
     return res.status(400).send({ message: "Campos obrigatórios não preenchidos." });
   }
+  
 
   try {
     const user = await userServices.createServices(req.body);

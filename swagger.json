@@ -1,0 +1,27 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Elfs fc API Documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "local Server"
+        }
+    ],
+    "paths": {
+        "/user/":{},
+        "/user":{},
+        "/user/{id}/":{},
+        "/user/{id}":{},
+        "/user/login":{},
+        "/produto/":{},
+        "/produto":{},
+        "/produto/search":{},
+        "/produto/{id}":{},
+        "/produto/{id}/":{},
+        "/produto/delete{id}":{}
+    },
+    "components":{}
+}

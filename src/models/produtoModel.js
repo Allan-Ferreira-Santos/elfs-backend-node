@@ -14,6 +14,10 @@ const proutoModel = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: true
+    },
     description: {
         type: String,
         required: true
@@ -22,7 +26,7 @@ const proutoModel = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
